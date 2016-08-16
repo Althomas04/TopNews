@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">TopNews</string>
+
+    <string name="source_prompt">Choose a source</string>
+    <string-array name="source_arrays">
+        <item>Malaysia</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>India</item>
+    </string-array>
+
+    <string name="no_news">No News Articles Found</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+
 </resources>

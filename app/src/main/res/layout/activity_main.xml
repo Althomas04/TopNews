@@ -15,9 +15,7 @@
         android:id="@+id/list_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/empty_state_Text_View"

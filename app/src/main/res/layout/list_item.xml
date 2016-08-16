@@ -6,15 +6,16 @@
     android:paddingEnd="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingStart="16dp">
+    android:paddingStart="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/article_image_view"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_gravity="center_vertical"
-        android:gravity="center" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/article_title_text_view"
@@ -22,49 +23,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/article_image_view"
         android:fontFamily="sans-serif-medium"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
         android:maxLines="3"
         android:textSize="16sp" />
-
-    <ImageView
-        android:id="@+id/logo_image_view"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_below="@+id/article_title_text_view"
-        android:layout_gravity="center_vertical"
-        android:gravity="center" />
 
     <TextView
         android:id="@+id/publisher_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
-        android:maxLines="1"
         android:textAllCaps="true"
         android:textSize="12sp"
         android:layout_below="@+id/article_title_text_view"
-        android:layout_toRightOf="@+id/logo_image_view"
-        android:layout_toEndOf="@+id/logo_image_view" />
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:id="@+id/time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
         android:textSize="12sp"
-        android:layout_below="@+id/publisher_text_view"
-        android:layout_toRightOf="@+id/logo_image_view"
-        android:layout_toEndOf="@+id/logo_image_view" />
-
-    <TextView
-        android:id="@+id/category_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:textSize="12sp"
-        android:layout_below="@+id/publisher_text_view"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/article_title_text_view"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>
