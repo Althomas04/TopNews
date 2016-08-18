@@ -172,7 +172,7 @@ public final class QueryUtils {
                 String imageUrl = currentNewsArticle.optString("urlToImage");
                 String publishedTime = currentNewsArticle.optString("publishedAt");
                 String articleUrl = currentNewsArticle.optString("url");
-                String publisher = root.optString("source");
+                String author = currentNewsArticle.optString("author");
 
                 try {
                     bitmap = BitmapFactory.decodeStream((InputStream) new URL(imageUrl).getContent());
@@ -182,7 +182,7 @@ public final class QueryUtils {
                     e.printStackTrace();
                 }
 
-                newsArticles.add(new NewsData(title, articleUrl, bitmap, publishedTime, publisher));
+                newsArticles.add(new NewsData(title, articleUrl, bitmap, author, publishedTime));
             }
 
         } catch (JSONException e) {

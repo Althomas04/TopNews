@@ -9,12 +9,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by al.thomas04 on 8/16/2016.
  */
 public class NewsAdapter extends ArrayAdapter {
+
+    /**
+     * Tag for log messages
+     */
+    private static final String LOG_TAG = NewsAdapter.class.getName();
 
     /**
      * This is our own custom constructor (it doesn't mirror a superclass constructor).
@@ -53,29 +60,75 @@ public class NewsAdapter extends ArrayAdapter {
         NewsData currentNewsData = (NewsData) getItem(position);
 
         // Find the TextView in the list_item.xml layout with the ID article_title_text_view
-        TextView articleTitleTextView = (TextView) listItemView.findViewById(R.id.article_title_text_view);
         // Get the title string from the CurrentNewsData and set the title string text on the articleTitleTextView
+        TextView articleTitleTextView = (TextView) listItemView.findViewById(R.id.article_title_text_view);
         String articleTitle = currentNewsData.getTitle();
         articleTitleTextView.setText(articleTitle);
 
-        // Find the TextView in the list_item.xml layout with the ID publisher_text_view
-        TextView publisherTextView = (TextView) listItemView.findViewById(R.id.publisher_text_view);
-        // Get the locationOffset from the current news data object and set this text on the publisher_text_view
-        String publisher = currentNewsData.getPublisher();
-        publisherTextView.setText(publisher);
+        // Find the TextView in the list_item.xml layout with the ID author_text_view
+        // Get the author from the current news data object and set this text on the author_text_view
+        TextView authorTextView = (TextView) listItemView.findViewById(R.id.author_text_view);
+        String author = currentNewsData.getAuthor();
+        authorTextView.setText(author);
 
-        // Find the TextView in the list_item.xml layout with the ID time_text_view
+        // Create a new string object from the published timed date, and convert into date object.
+        String timedDateObject = currentNewsData.getTime();
+        Date convertedTimedDate = convertTimedDate(timedDateObject);
+
+        // Find the TextView in the list_item.xml layout with the ID date_text_view
+        // Format the date string (i.e. "Mar 3, 1984")
+        // Set the formatted date string text on the dateTextView
+        TextView dateTextView = (TextView) listItemView.findViewById(R.id.date_text_view);
+        String formattedDate = formatDate(convertedTimedDate);
+        dateTextView.setText(formattedDate);
+
+        // Find the TextView in the list_item.xml layout with the ID date_text_view
+        // Format the time string (i.e. "4:30PM")
+        // Set the formatted time string text on the timeTextView
         TextView timeTextView = (TextView) listItemView.findViewById(R.id.time_text_view);
-        // Get the time from the current location object and set this text on the time_text_view
-        String time = currentNewsData.getTime();
-        timeTextView.setText(time);
+        String formattedTime = formatTime(convertedTimedDate);
+        timeTextView.setText(formattedTime);
 
+        // Find the ImageView in the list_item.xml layout with the ID article_image_view
+        // Get the bitmap image from the current news data object, scale it, and set this image on the ImageView
         ImageView articleImageView = (ImageView) listItemView.findViewById(R.id.article_image_view);
         Bitmap articleImage = currentNewsData.getImageBitmap();
+        articleImage = Bitmap.createScaledBitmap(articleImage, 1500, 1000, true);
         articleImageView.setImageBitmap(articleImage);
 
         // Return the whole list item layout so that it can be shown in the ListView
         return listItemView;
+    }
+
+    /**
+     * Convert Timed Date string into "MM/dd/yyyy'T'HH:mm:ss" format.
+     */
+    private Date convertTimedDate(String timedDateObject) {
+        SimpleDateFormat timedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date convertedTimedDate = new Date();
+        try {
+            convertedTimedDate = timedDateFormat.parse(timedDateObject);
+
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return convertedTimedDate;
+    }
+
+    /**
+     * Return the formatted date string (i.e. "Mar 3, 1984") from a Date object.
+     */
+    private String formatDate(Date dateObject) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
+        return dateFormatter.format(dateObject);
+    }
+
+    /**
+     * Return the formatted time string (i.e. "4:30 PM") from a Date object.
+     */
+    private String formatTime(Date dateObject) {
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
+        return timeFormatter.format(dateObject);
     }
 
 }

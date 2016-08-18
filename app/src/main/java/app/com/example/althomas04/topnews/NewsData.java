@@ -11,14 +11,14 @@ public class NewsData {
     private String mUrl;
     private Bitmap mImageBitmap;
     private String mTime;
-    private String mPublisher;
+    private String mAuthor;
 
-    public NewsData(String title, String url, Bitmap imageBitmap, String time, String publisher) {
+    public NewsData(String title, String url, Bitmap imageBitmap, String author, String time) {
         mTitle = title;
         mUrl = url;
         mImageBitmap = imageBitmap;
         mTime = time;
-        mPublisher = publisher;
+        mAuthor = author;
     }
 
     public String getTime() {
@@ -37,7 +37,7 @@ public class NewsData {
         return mUrl;
     }
 
-    public String getPublisher() {
-        return mPublisher;
+    public String getAuthor() {
+        return mAuthor;
     }
 }

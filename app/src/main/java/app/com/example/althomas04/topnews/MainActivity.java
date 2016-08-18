@@ -75,27 +75,32 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mSpinnerList = (Spinner) findViewById(R.id.source_spinner);
 
         // Creating adapter for spinner
-        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.source_arrays, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.source_arrays, R.layout.custom_spinner_item);
         // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
 
         // attaching data adapter to spinner
         mSpinnerList.setAdapter(dataAdapter);
 
+        // Setting a listener to spinner to detect if an item has been clicked and to initialize/restart loader.
         mSpinnerList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                // On selecting a publisher source, the loader initializes using the selected source parameter
+                // On selecting a publisher source, the source parameter is set to the new source.
                 String newSourceParam = parent.getItemAtPosition(position).toString();
                 newSourceParam = newSourceParam.toLowerCase();
                 newSourceParam = newSourceParam.replaceAll("\\s", "");
                 sourceParam = newSourceParam;
 
+                // If a new source has been selected, the loader restarts
+                // and updates the news articles using the new source parameter.
                 int newId = (int) id;
                 if (currentId != newId) {
                     currentId = newId;
                     LoaderManager loaderManager = getLoaderManager();
                     loaderManager.restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
+                    //Set the loading spinner to reappear when reloading view.
+                    mLoadingSpinnerView.setVisibility(View.VISIBLE);
                 } else {
                     startLoader();
                 }
