@@ -3,14 +3,27 @@
 
     <string name="source_prompt">Choose a source</string>
     <string-array name="source_arrays">
-        <item>Malaysia</item>
-        <item>United States</item>
-        <item>Indonesia</item>
-        <item>France</item>
-        <item>Italy</item>
-        <item>Singapore</item>
-        <item>New Zealand</item>
-        <item>India</item>
+        <item>Associated Press</item>
+        <item>BBC News</item>
+        <item>Bloomberg</item>
+        <item>Buzzfeed</item>
+        <item>CNBC</item>
+        <item>CNN</item>
+        <item>Engadget</item>
+        <item>Entertainment Weekly</item>
+        <item>ESPN</item>
+        <item>Google News</item>
+        <item>Hacker News</item>
+        <item>IGN</item>
+        <item>Reuters</item>
+        <item>TechCrunch</item>
+        <item>The Huffington Post</item>
+        <item>The New York Times</item>
+        <item>The Times of India</item>
+        <item>The Verge</item>
+        <item>The Wall Street Journal</item>
+        <item>The Washington Post</item>
+
     </string-array>
 
     <string name="no_news">No News Articles Found</string>

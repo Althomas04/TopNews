@@ -11,11 +11,21 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
+    <Spinner
+        android:id="@+id/source_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/source_arrays"
+        android:prompt="@string/source_prompt"
+        android:background="@color/colorPrimary"></Spinner>
+
+
     <ListView
         android:id="@+id/list_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/source_spinner" />
 
     <TextView
         android:id="@+id/empty_state_Text_View"

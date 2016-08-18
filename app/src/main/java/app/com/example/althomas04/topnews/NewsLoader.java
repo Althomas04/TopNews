@@ -24,11 +24,12 @@ public class NewsLoader extends AsyncTaskLoader<List<NewsData>> {
      * Constructs a new {@link NewsLoader}.
      *
      * @param context of the activity
-     * @param url     to load data from
+     * //@param url     to load data from
      */
-    public NewsLoader(Context context, String url) {
+    public NewsLoader(Context context, String baseUrl, String sourceParam, String apiKeyParam) {
         super(context);
-        mUrl = url;
+        mUrl = baseUrl + "source=" + sourceParam + "&apiKey=" + apiKeyParam;
+        ;
     }
 
     @Override
