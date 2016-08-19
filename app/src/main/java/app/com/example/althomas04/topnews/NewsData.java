@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 /**
  * Created by al.thomas04 on 8/16/2016.
  */
+
+//Customized class that enables the creation of a custom array, which is populated using the News API JSON.
 public class NewsData {
 
     private String mTitle;

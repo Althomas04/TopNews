@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TopNews</string>
+    <string name="app_name">Top News</string>
 
     <string name="source_prompt">Choose a source</string>
     <string-array name="source_arrays">

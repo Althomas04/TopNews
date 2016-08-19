@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,40 +22,36 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<NewsData>> {
 
 
-    /** URL  to obtain news data from the newsapi dataset. (Full URL initialized in NewsLoader Class).
-     *  newsApiUrl = BASE_URL + "source=" + sourceParam + "&apiKey=" + API_KEY_PARAM;
-     */
+    //URL  to obtain news data from the newsapi dataset. (Full URL initialized in NewsLoader Class).
+    //newsApiUrl = BASE_URL + "source=" + sourceParam + "&apiKey=" + API_KEY_PARAM;
     private static final String BASE_URL = "https://newsapi.org/v1/articles?";
     private String sourceParam;
     private static final String API_KEY_PARAM = "1c6bfb07da424863b2d1585048088a67";
 
-    /**
-     * Adapter for the list of news articles
-     */
+    //Adapter for the list of news articles
     private NewsAdapter mAdapter;
 
-    /**
-     * Constant value for the news loader ID. We can choose any integer.
-     * This really only comes into play if you're using multiple loaders.
-     */
+    //Constant value for the news loader ID. We can choose any integer.
+    //This really only comes into play if you're using multiple loaders.
     private static final int NEWS_LOADER_ID = 0;
 
-    /**
-     * TextView that is displayed when the list is empty
-     */
+    //TextView that is displayed when the list is empty
     private TextView mEmptyStateTextView;
 
-    /**
-     * Progress bar that is displayed while the list is being populated
-     */
+    //Progress bar that is displayed while the list is being populated
     private ProgressBar mLoadingSpinnerView;
 
-    /**
-     * Spinner that displays a list of publisher sources
-     */
+
+    //Spinner view that displays a list of publisher sources
+
     private Spinner mSpinnerList;
 
+    //Initiialized a counter variiable for the if statement in Spinner itemSelectListener
     private int currentId = 0;
+
+    //Stores the url from article that is accessed through clickListener
+    //Also used in WebViewActivity
+    public static String newsArticleUrl;
 
 
     @Override
@@ -112,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
         // Create a empty list of News info.
-        ArrayList<NewsData> newsArticlesArrayList = new ArrayList<NewsData>();
+        final ArrayList<NewsData> newsArticlesArrayList = new ArrayList<NewsData>();
 
         // Find a reference to the {@link ListView} in the layout
         ListView newsListView = (ListView) findViewById(R.id.list_view);
@@ -132,14 +127,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 // Find the current news article that was clicked on
                 NewsData currentNewsArticle = (NewsData) mAdapter.getItem(position);
 
-                // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri newsArticleUri = Uri.parse(currentNewsArticle.getUrl());
-
-                // Create a new intent to view the news article URI
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsArticleUri);
-
-                // Send the intent to launch a new activity
-                startActivity(websiteIntent);
+                // Get the String Url (to pass into the Intent constructor)
+                newsArticleUrl = currentNewsArticle.getUrl();
+                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -147,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         newsListView.setEmptyView(mEmptyStateTextView);
 
     }
+
 
     private void startLoader() {
 

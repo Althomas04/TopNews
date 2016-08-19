@@ -29,7 +29,6 @@ public class NewsLoader extends AsyncTaskLoader<List<NewsData>> {
     public NewsLoader(Context context, String baseUrl, String sourceParam, String apiKeyParam) {
         super(context);
         mUrl = baseUrl + "source=" + sourceParam + "&apiKey=" + apiKeyParam;
-        ;
     }
 
     @Override
