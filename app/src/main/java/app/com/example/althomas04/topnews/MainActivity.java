@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 // Find the current news article that was clicked on
                 NewsData currentNewsArticle = (NewsData) mAdapter.getItem(position);
 
-                // Get the String Url (to pass into the Intent constructor)
+                // Get the String  article Url (to pass into the Intent constructor)
                 newsArticleUrl = currentNewsArticle.getUrl();
                 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
                 startActivity(intent);

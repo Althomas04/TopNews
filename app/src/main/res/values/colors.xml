@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="spinner_background_color">#f7ba2c</color>
+    <color name="activity_main_background_color">#efeded</color>
 </resources>

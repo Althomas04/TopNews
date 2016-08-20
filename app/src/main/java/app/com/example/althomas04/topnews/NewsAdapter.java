@@ -51,9 +51,9 @@ public class NewsAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Check if the existing view is being resused, otherwise inflate the view
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+        View listItem = convertView;
+        if (listItem == null) {
+            listItem = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         }
 
         // Get the {@link word} object located at this position in the list
@@ -61,16 +61,21 @@ public class NewsAdapter extends ArrayAdapter {
 
         // Find the TextView in the list_item.xml layout with the ID article_title_text_view
         // Get the title string from the CurrentNewsData and set the title string text on the articleTitleTextView
-        TextView articleTitleTextView = (TextView) listItemView.findViewById(R.id.article_title_text_view);
+        TextView articleTitleTextView = (TextView) listItem.findViewById(R.id.article_title_text_view);
         String articleTitle = currentNewsData.getTitle();
         articleTitleTextView.setText(articleTitle);
 
         // Find the TextView in the list_item.xml layout with the ID author_text_view
         // Get the author from the current news data object and set this text on the author_text_view
-        TextView authorTextView = (TextView) listItemView.findViewById(R.id.author_text_view);
+        // only IF author is not set as "null" or a http link, if they are, the publisher will be displayed instead.
+        TextView authorTextView = (TextView) listItem.findViewById(R.id.author_text_view);
         String author = currentNewsData.getAuthor();
-        authorTextView.setText(author);
-
+        String publisher = currentNewsData.getPublisher();
+        if (author != "null" && !author.contains("http")) {
+            authorTextView.setText(author);
+        } else {
+            authorTextView.setText(publisher);
+        }
         // Create a new string object from the published timed date, and convert into date object.
         String timedDateObject = currentNewsData.getTime();
         Date convertedTimedDate = convertTimedDate(timedDateObject);
@@ -78,26 +83,42 @@ public class NewsAdapter extends ArrayAdapter {
         // Find the TextView in the list_item.xml layout with the ID date_text_view
         // Format the date string (i.e. "Mar 3, 1984")
         // Set the formatted date string text on the dateTextView
-        TextView dateTextView = (TextView) listItemView.findViewById(R.id.date_text_view);
+        TextView dateTextView = (TextView) listItem.findViewById(R.id.date_text_view);
         String formattedDate = formatDate(convertedTimedDate);
         dateTextView.setText(formattedDate);
 
         // Find the TextView in the list_item.xml layout with the ID date_text_view
         // Format the time string (i.e. "4:30PM")
         // Set the formatted time string text on the timeTextView
-        TextView timeTextView = (TextView) listItemView.findViewById(R.id.time_text_view);
+        TextView timeTextView = (TextView) listItem.findViewById(R.id.time_text_view);
         String formattedTime = formatTime(convertedTimedDate);
         timeTextView.setText(formattedTime);
 
+        // Find the TextView in the list_item.xml layout with the ID article_description_text_view
+        // Get the description string from the current news data object, and display it
+        // only IF news data object does not contain an article image. (Checked in if statement).
+        TextView descriptionTextView = (TextView) listItem.findViewById(R.id.article_description_text_view);
+        String articleDescription = currentNewsData.getDescription();
+
         // Find the ImageView in the list_item.xml layout with the ID article_image_view
         // Get the bitmap image from the current news data object, scale it, and set this image on the ImageView
-        ImageView articleImageView = (ImageView) listItemView.findViewById(R.id.article_image_view);
+        // only IF news data object contains a vaild image. (Checked in if statement).
+        ImageView articleImageView = (ImageView) listItem.findViewById(R.id.article_image_view);
         Bitmap articleImage = currentNewsData.getImageBitmap();
-        articleImage = Bitmap.createScaledBitmap(articleImage, 1500, 1000, true);
-        articleImageView.setImageBitmap(articleImage);
+
+        if (articleImage != null) {
+            articleImage = Bitmap.createScaledBitmap(articleImage, 1300, 1000, true);
+            articleImageView.setImageBitmap(articleImage);
+            articleImageView.setVisibility(View.VISIBLE);
+            descriptionTextView.setVisibility(View.GONE);
+        } else {
+            articleImageView.setVisibility(View.GONE);
+            descriptionTextView.setText(articleDescription);
+            descriptionTextView.setVisibility(View.VISIBLE);
+        }
 
         // Return the whole list item layout so that it can be shown in the ListView
-        return listItemView;
+        return listItem;
     }
 
     /**

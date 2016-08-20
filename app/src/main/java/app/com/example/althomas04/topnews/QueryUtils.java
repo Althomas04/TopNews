@@ -34,6 +34,7 @@ public final class QueryUtils {
      */
     public static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
+
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
      * This class is only meant to hold static variables and methods, which can be accessed
@@ -158,6 +159,7 @@ public final class QueryUtils {
         List<NewsData> newsArticles = new ArrayList<>();
 
         Bitmap bitmap = null;
+        String description = null;
 
         try {
 
@@ -173,16 +175,23 @@ public final class QueryUtils {
                 String publishedTime = currentNewsArticle.optString("publishedAt");
                 String articleUrl = currentNewsArticle.optString("url");
                 String author = currentNewsArticle.optString("author");
+                String publisher = root.optString("source");
 
+                // Get an image from from the imageUrl, if null or an exception occurs, the error is printed
+                // and a full description is stored. To prevent unnecessary memory resource usage, the full description is only
+                // parsed and stored when image does not exist, or else it defaults to null. (Since description is only
+                // used and displayed on screen when an article image is invalid.)
                 try {
                     bitmap = BitmapFactory.decodeStream((InputStream) new URL(imageUrl).getContent());
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
+                    description = currentNewsArticle.optString("description");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    description = currentNewsArticle.optString("description");
                 }
 
-                newsArticles.add(new NewsData(title, articleUrl, bitmap, author, publishedTime));
+                newsArticles.add(new NewsData(title, articleUrl, bitmap, author, publishedTime, publisher, description));
             }
 
         } catch (JSONException e) {

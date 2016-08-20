@@ -3,12 +3,13 @@
     android:id="@+id/list_item_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingStart="16dp"
+    android:background="@android:color/white"
+    android:paddingEnd="13dp"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:paddingStart="13dp"
     android:paddingTop="12dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="12dp">
 
     <ImageView
         android:id="@+id/article_image_view"
@@ -26,7 +27,19 @@
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:maxLines="3"
+        android:ellipsize="end"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/article_description_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/article_title_text_view"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@android:color/black"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/author_text_view"
@@ -35,7 +48,7 @@
         android:fontFamily="sans-serif-medium"
         android:textAllCaps="true"
         android:textSize="12sp"
-        android:layout_below="@+id/article_title_text_view"
+        android:layout_below="@+id/article_description_text_view"
         android:layout_alignParentLeft="true" />
 
     <TextView
@@ -43,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:layout_below="@+id/article_title_text_view"
+        android:layout_below="@+id/article_description_text_view"
         android:layout_alignParentRight="true" />
 
     <TextView
