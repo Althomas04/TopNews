@@ -46,7 +46,6 @@
         android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:textAllCaps="true"
         android:textSize="12sp"
         android:layout_below="@+id/article_description_text_view"
         android:layout_alignParentLeft="true" />

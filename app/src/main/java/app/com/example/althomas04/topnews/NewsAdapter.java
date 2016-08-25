@@ -12,6 +12,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by al.thomas04 on 8/16/2016.
@@ -67,14 +69,14 @@ public class NewsAdapter extends ArrayAdapter {
 
         // Find the TextView in the list_item.xml layout with the ID author_text_view
         // Get the author from the current news data object and set this text on the author_text_view
-        // only IF author is not set as "null" or a http link, if they are, the publisher will be displayed instead.
+        // only IF author is not set as "null" or a http link, if it is, the publisher will be displayed instead.
         TextView authorTextView = (TextView) listItem.findViewById(R.id.author_text_view);
         String author = currentNewsData.getAuthor();
         String publisher = currentNewsData.getPublisher();
         if (author != "null" && !author.contains("http")) {
             authorTextView.setText(author);
         } else {
-            authorTextView.setText(publisher);
+            authorTextView.setText(publisher.toUpperCase());
         }
         // Create a new string object from the published timed date, and convert into date object.
         String timedDateObject = currentNewsData.getTime();
@@ -125,7 +127,8 @@ public class NewsAdapter extends ArrayAdapter {
      * Convert Timed Date string into "MM/dd/yyyy'T'HH:mm:ss" format.
      */
     private Date convertTimedDate(String timedDateObject) {
-        SimpleDateFormat timedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat timedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        timedDateFormat.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
         Date convertedTimedDate = new Date();
         try {
             convertedTimedDate = timedDateFormat.parse(timedDateObject);
@@ -140,7 +143,7 @@ public class NewsAdapter extends ArrayAdapter {
      * Return the formatted date string (i.e. "Mar 3, 1984") from a Date object.
      */
     private String formatDate(Date dateObject) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         return dateFormatter.format(dateObject);
     }
 
@@ -148,7 +151,7 @@ public class NewsAdapter extends ArrayAdapter {
      * Return the formatted time string (i.e. "4:30 PM") from a Date object.
      */
     private String formatTime(Date dateObject) {
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a", Locale.US);
         return timeFormatter.format(dateObject);
     }
 

@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Top News</string>
 
-    <string name="source_prompt">Choose a source</string>
+    <string name="source_prompt">Select Source</string>
+
     <string-array name="source_arrays">
         <item>Associated Press</item>
         <item>BBC News</item>
