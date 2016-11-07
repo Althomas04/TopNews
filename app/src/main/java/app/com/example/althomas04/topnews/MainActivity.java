@@ -7,7 +7,11 @@ import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //URL  to obtain news data from the newsapi dataset. (Full URL initialized in NewsLoader Class).
     //newsApiUrl = BASE_URL + "source=" + sourceParam + "&apiKey=" + API_KEY_PARAM;
     private static final String BASE_URL = "https://newsapi.org/v1/articles?";
-    private String sourceParam;
-    private static final String API_KEY_PARAM = "1c6bfb07da424863b2d1585048088a67";
+    private String sourceParam = "associatedpress"; //default
+    private static final String API_KEY_PARAM = BuildConfig.NEWS_API_KEY;
 
     //Adapter for the list of news articles
     private NewsAdapter mAdapter;
@@ -43,10 +47,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     //Spinner view that displays a list of publisher sources
-
     private Spinner mSpinnerList;
 
-    //Initiialized a counter variiable for the if statement in Spinner itemSelectListener
     private int currentId = 0;
 
     //Stores the url from article that is accessed through clickListener
@@ -65,46 +67,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Find a reference to the {@link TextView} in the layout
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_state_Text_View);
 
-
-        // Find a reference to the {@link Spinner} in the layout
-        mSpinnerList = (Spinner) findViewById(R.id.source_spinner);
-
-        // Creating adapter for spinner
-        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.source_arrays, R.layout.custom_spinner_item);
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        mSpinnerList.setAdapter(dataAdapter);
-
-        // Setting a listener to spinner to detect if an item has been clicked and to initialize/restart loader.
-        mSpinnerList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                // On selecting a publisher source, the source parameter is set to the new source.
-                String newSourceParam = parent.getItemAtPosition(position).toString();
-                newSourceParam = newSourceParam.toLowerCase();
-                newSourceParam = newSourceParam.replaceAll("\\s", "");
-                sourceParam = newSourceParam;
-
-                // If a new source has been selected, the loader restarts
-                // and updates the news articles using the new source parameter.
-                int newId = (int) id;
-                if (currentId != newId) {
-                    currentId = newId;
-                    LoaderManager loaderManager = getLoaderManager();
-                    loaderManager.restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
-                    //Set the loading spinner to reappear when reloading view.
-                    mLoadingSpinnerView.setVisibility(View.VISIBLE);
-                } else {
-                    startLoader();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        startLoader();
 
         // Create a empty list of News info.
         final ArrayList<NewsData> newsArticlesArrayList = new ArrayList<NewsData>();
@@ -137,6 +100,60 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Set the empty view on to the screen if news info list is empty.
         newsListView.setEmptyView(mEmptyStateTextView);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem item = menu.findItem(R.id.spinner);
+
+        // Find a reference to the {@link Spinner} in the layout
+        mSpinnerList = (Spinner) MenuItemCompat.getActionView(item);
+
+        // Creating adapter for spinner
+        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.source_arrays, R.layout.custom_spinner_item);
+
+        // Drop down layout style
+        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+
+        //Layout style for selected source on the action bar. Decreases space between spinner icon and text.
+        mSpinnerList.setPadding(0, 0, 150, 0);
+        mSpinnerList.setGravity(Gravity.END);
+
+        // set the adapter to provide layout of rows and content
+        mSpinnerList.setAdapter(dataAdapter);
+
+        //Set the listener, to perform actions based on item selection
+        // Setting a listener to spinner to detect if an item has been clicked and to initialize/restart loader.
+        mSpinnerList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+                // On selecting a publisher source, the source parameter is set to the new source.
+                String newSourceParam = parent.getItemAtPosition(position).toString();
+                newSourceParam = newSourceParam.toLowerCase();
+                newSourceParam = newSourceParam.replaceAll("\\s", "");
+                sourceParam = newSourceParam;
+
+                // If a new source has been selected, the loader restarts
+                // and updates the news articles using the new source parameter.
+                int newId = (int) id;
+                if (currentId != newId) {
+                    currentId = newId;
+                    LoaderManager loaderManager = getLoaderManager();
+                    loaderManager.restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
+                    //Set the loading spinner to reappear when reloading view.
+                    mLoadingSpinnerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        return true;
     }
 
 

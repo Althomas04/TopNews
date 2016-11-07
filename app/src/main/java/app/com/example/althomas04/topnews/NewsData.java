@@ -1,7 +1,5 @@
 package app.com.example.althomas04.topnews;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by al.thomas04 on 8/16/2016.
  */
@@ -11,16 +9,16 @@ public class NewsData {
 
     private String mTitle;
     private String mUrl;
-    private Bitmap mImageBitmap;
+    private String mImageUrl;
     private String mTime;
     private String mAuthor;
     private String mPublisher;
     private String mDescription;
 
-    public NewsData(String title, String url, Bitmap imageBitmap, String author, String time, String publisher, String description) {
+    public NewsData(String title, String url, String imageUrl, String author, String time, String publisher, String description) {
         mTitle = title;
         mUrl = url;
-        mImageBitmap = imageBitmap;
+        mImageUrl = imageUrl;
         mTime = time;
         mAuthor = author;
         mPublisher = publisher;
@@ -31,8 +29,8 @@ public class NewsData {
         return mTime;
     }
 
-    public Bitmap getImageBitmap() {
-        return mImageBitmap;
+    public String getImageUrl() {
+        return mImageUrl;
     }
 
     public String getTitle() {

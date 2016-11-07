@@ -55,7 +55,7 @@ public class WebViewActivity extends Activity {
     }
 
     // IF the user further navigates within the webview, pressing the device back button will
-    // allow users to navigate back within the webview rather than bringing them back to the main activity.
+    // allow users to navigate back within the webview itself rather than bringing them back to the main activity.
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check for browser web page history

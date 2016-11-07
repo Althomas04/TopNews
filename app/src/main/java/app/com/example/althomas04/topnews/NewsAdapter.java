@@ -1,13 +1,14 @@
 package app.com.example.althomas04.topnews;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,11 +20,6 @@ import java.util.TimeZone;
  * Created by al.thomas04 on 8/16/2016.
  */
 public class NewsAdapter extends ArrayAdapter {
-
-    /**
-     * Tag for log messages
-     */
-    private static final String LOG_TAG = NewsAdapter.class.getName();
 
     /**
      * This is our own custom constructor (it doesn't mirror a superclass constructor).
@@ -52,7 +48,7 @@ public class NewsAdapter extends ArrayAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Check if the existing view is being resused, otherwise inflate the view
+        // Check if the existing view is being reused, otherwise inflate the view
         View listItem = convertView;
         if (listItem == null) {
             listItem = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
@@ -106,13 +102,15 @@ public class NewsAdapter extends ArrayAdapter {
         // Get the bitmap image from the current news data object, scale it, and set this image on the ImageView
         // only IF news data object contains a vaild image. (Checked in if statement).
         ImageView articleImageView = (ImageView) listItem.findViewById(R.id.article_image_view);
-        Bitmap articleImage = currentNewsData.getImageBitmap();
+        String articleImageUrl = currentNewsData.getImageUrl();
 
-        if (articleImage != null) {
-            articleImage = Bitmap.createScaledBitmap(articleImage, 1300, 1000, true);
-            articleImageView.setImageBitmap(articleImage);
-            articleImageView.setVisibility(View.VISIBLE);
+        if (articleImageUrl != "null") {
             descriptionTextView.setVisibility(View.GONE);
+            Picasso.with(getContext())
+                    .load(articleImageUrl)
+                    .resize(1300, 1000)
+                    .into(articleImageView);
+            articleImageView.setVisibility(View.VISIBLE);
         } else {
             articleImageView.setVisibility(View.GONE);
             descriptionTextView.setText(articleDescription);

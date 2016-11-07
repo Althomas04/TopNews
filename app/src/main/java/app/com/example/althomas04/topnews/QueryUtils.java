@@ -4,8 +4,6 @@ package app.com.example.althomas04.topnews;
  * Created by al.thomas04 on 8/16/2016.
  */
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -158,8 +156,6 @@ public final class QueryUtils {
         // Create an empty ArrayList that we can start adding newsArticles to
         List<NewsData> newsArticles = new ArrayList<>();
 
-        Bitmap bitmap = null;
-        String description = null;
 
         try {
 
@@ -170,35 +166,22 @@ public final class QueryUtils {
             for (int i = 0; i < articles.length(); i++) {
                 JSONObject currentNewsArticle = articles.getJSONObject(i);
 
+                String publisher = root.optString("source");
+                String author = currentNewsArticle.optString("author");
                 String title = currentNewsArticle.optString("title");
+                String articleUrl = currentNewsArticle.optString("url");
                 String imageUrl = currentNewsArticle.optString("urlToImage");
                 String publishedTime = currentNewsArticle.optString("publishedAt");
-                String articleUrl = currentNewsArticle.optString("url");
-                String author = currentNewsArticle.optString("author");
-                String publisher = root.optString("source");
+                String description = currentNewsArticle.optString("description");
 
-                // Get an image from from the imageUrl, if null or an exception occurs, the error is printed
-                // and a full description is stored. To prevent unnecessary memory resource usage, the full description is only
-                // parsed and stored when image does not exist, or else it defaults to null. (Since description is only
-                // used and displayed on screen when an article image is invalid.)
-                try {
-                    bitmap = BitmapFactory.decodeStream((InputStream) new URL(imageUrl).getContent());
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                    description = currentNewsArticle.optString("description");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    description = currentNewsArticle.optString("description");
-                }
-
-                newsArticles.add(new NewsData(title, articleUrl, bitmap, author, publishedTime, publisher, description));
+                newsArticles.add(new NewsData(title, articleUrl, imageUrl, author, publishedTime, publisher, description));
             }
 
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the News JSON results", e);
+            Log.e("QueryUtils-extractFeat.", "Problem parsing the News JSON results", e);
         }
 
         // Return the list of newsArticles
