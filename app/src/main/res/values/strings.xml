@@ -2,6 +2,7 @@
     <string name="app_name">Top News</string>
 
     <string name="source">Select Source</string>
+    <string name="action_share">Share</string>
 
     <string-array name="source_arrays">
         <item>Associated Press</item>

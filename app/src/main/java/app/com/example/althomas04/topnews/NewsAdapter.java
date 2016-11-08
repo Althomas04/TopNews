@@ -97,23 +97,29 @@ public class NewsAdapter extends ArrayAdapter {
         // only IF news data object does not contain an article image. (Checked in if statement).
         TextView descriptionTextView = (TextView) listItem.findViewById(R.id.article_description_text_view);
         String articleDescription = currentNewsData.getDescription();
+        descriptionTextView.setText(articleDescription);
 
         // Find the ImageView in the list_item.xml layout with the ID article_image_view
-        // Get the bitmap image from the current news data object, scale it, and set this image on the ImageView
+        // Get the image using picasso library, scale it, and set this image on the ImageView
         // only IF news data object contains a vaild image. (Checked in if statement).
         ImageView articleImageView = (ImageView) listItem.findViewById(R.id.article_image_view);
         String articleImageUrl = currentNewsData.getImageUrl();
 
+        //Checks if image is valid (not null) and the orientation mode.
+        //Description view is only visible when image is not valid or if the orientation is in landscape.
         if (articleImageUrl != "null") {
-            descriptionTextView.setVisibility(View.GONE);
             Picasso.with(getContext())
                     .load(articleImageUrl)
                     .resize(1300, 1000)
                     .into(articleImageView);
             articleImageView.setVisibility(View.VISIBLE);
+            if (getContext().getResources().getBoolean(R.bool.is_portrait)) {
+                descriptionTextView.setVisibility(View.GONE);
+            } else {
+                descriptionTextView.setVisibility(View.VISIBLE);
+            }
         } else {
             articleImageView.setVisibility(View.GONE);
-            descriptionTextView.setText(articleDescription);
             descriptionTextView.setVisibility(View.VISIBLE);
         }
 
