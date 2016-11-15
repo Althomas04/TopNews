@@ -110,7 +110,7 @@ public class NewsAdapter extends ArrayAdapter {
         if (articleImageUrl != "null") {
             Picasso.with(getContext())
                     .load(articleImageUrl)
-                    .resize(1300, 1000)
+                    .resize(1360, 900)
                     .into(articleImageView);
             articleImageView.setVisibility(View.VISIBLE);
             if (getContext().getResources().getBoolean(R.bool.is_portrait)) {
