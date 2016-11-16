@@ -49,11 +49,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //Spinner view that displays a list of publisher sources
     private Spinner mSpinnerList;
 
-    private int currentId = 0;
+    private int mCurrentSourceId = 0;
 
     //Stores the url from article that is accessed through clickListener
     //Also used in WebViewActivity
     public static String newsArticleUrl;
+
+    private ListView newsListView;
+
+    private int mPosition = ListView.INVALID_POSITION;
+
+    private static final String SELECTED_LIST_ITEM_KEY = "selected_position";
 
 
     @Override
@@ -73,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         final ArrayList<NewsData> newsArticlesArrayList = new ArrayList<NewsData>();
 
         // Find a reference to the {@link ListView} in the layout
-        ListView newsListView = (ListView) findViewById(R.id.list_view);
+        newsListView = (ListView) findViewById(R.id.list_view);
 
         // Create a new {@link ArrayAdapter} of news articles
         mAdapter = new NewsAdapter(this, newsArticlesArrayList);
@@ -94,8 +100,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 newsArticleUrl = currentNewsArticle.getUrl();
                 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
                 startActivity(intent);
+                mPosition = position;
             }
         });
+
+        // If there's instance state, mine it for useful information.
+        // The end-goal here is that the user never knows that turning their device sideways
+        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
+        // or magically appeared to take advantage of room, but data or place in the app was never
+        // actually *lost*.
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_LIST_ITEM_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_LIST_ITEM_KEY);
+        }
 
         // Set the empty view on to the screen if news info list is empty.
         newsListView.setEmptyView(mEmptyStateTextView);
@@ -138,11 +156,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 // If a new source has been selected, the loader restarts
                 // and updates the news articles using the new source parameter.
-                int newId = (int) id;
-                if (currentId != newId) {
-                    currentId = newId;
+                int newSourceId = (int) id;
+                if (mCurrentSourceId != newSourceId) {
+                    mCurrentSourceId = newSourceId;
                     LoaderManager loaderManager = getLoaderManager();
                     loaderManager.restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
+
+
+                    //Reset the savedInstanceState value to 0 to prevent a new listview from automatically
+                    //scrolling to an item using the previously saved position.
+                    mPosition = 0;
+
                     //Set the loading spinner to reappear when reloading view.
                     mLoadingSpinnerView.setVisibility(View.VISIBLE);
                 }
@@ -154,6 +178,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_about) {
+            startActivity(new Intent(this, AboutActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_LIST_ITEM_KEY, mPosition);
+
+            super.onSaveInstanceState(outState);
+        }
     }
 
 
@@ -200,6 +245,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //Set the loading spinner to disappear after the loading has finished.
         mLoadingSpinnerView.setVisibility(View.GONE);
+
+        if (mPosition != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            newsListView.smoothScrollToPosition(mPosition);
+
+        }
     }
 
     @Override
