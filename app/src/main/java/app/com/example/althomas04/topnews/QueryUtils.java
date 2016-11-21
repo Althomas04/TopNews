@@ -46,7 +46,7 @@ public final class QueryUtils {
      * parsing a JSON response.
      */
     public static List<NewsData> fetchNewsData(String requestUrl) {
-
+        Log.d(LOG_TAG, "Starting JSON request");
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -156,7 +156,6 @@ public final class QueryUtils {
         // Create an empty ArrayList that we can start adding newsArticles to
         List<NewsData> newsArticles = new ArrayList<>();
 
-
         try {
 
             JSONObject root = new JSONObject(newsDataJSON);
@@ -182,6 +181,18 @@ public final class QueryUtils {
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryUtils-extractFeat.", "Problem parsing the News JSON results", e);
+        }
+
+        //Remove duplicates by checking if article titles within the array list match.
+        int i = 0;
+        while (i < (newsArticles.size() - 1)) {
+            NewsData currentArticle = newsArticles.get(i);
+            NewsData nextArticle = newsArticles.get(i + 1);
+            if (currentArticle.getTitle().equals(nextArticle.getTitle())) {
+                newsArticles.remove(i + 1);
+            } else {
+                i++;
+            }
         }
 
         // Return the list of newsArticles

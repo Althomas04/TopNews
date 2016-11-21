@@ -25,6 +25,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<NewsData>> {
 
+    public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     //URL  to obtain news data from the newsapi dataset. (Full URL initialized in NewsLoader Class).
     //newsApiUrl = BASE_URL + "source=" + sourceParam + "&apiKey=" + API_KEY_PARAM;
@@ -53,11 +54,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //Stores the url from article that is accessed through clickListener
     //Also used in WebViewActivity
-    public static String newsArticleUrl;
+    public static String NEWS_ARTICLE_URL = "news_article_url";
 
     private ListView newsListView;
 
-    private int mPosition = ListView.INVALID_POSITION;
+    private int mCurrentListPosition = ListView.INVALID_POSITION;
 
     private static final String SELECTED_LIST_ITEM_KEY = "selected_position";
 
@@ -97,10 +98,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 NewsData currentNewsArticle = (NewsData) mAdapter.getItem(position);
 
                 // Get the String  article Url (to pass into the Intent constructor)
-                newsArticleUrl = currentNewsArticle.getUrl();
+                String newsArticleUrl = currentNewsArticle.getUrl();
                 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+                intent.putExtra(NEWS_ARTICLE_URL, newsArticleUrl);
                 startActivity(intent);
-                mPosition = position;
+                mCurrentListPosition = position;
             }
         });
 
@@ -112,7 +114,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_LIST_ITEM_KEY)) {
             // The listview probably hasn't even been populated yet.  Actually perform the
             // swapout in onLoadFinished.
-            mPosition = savedInstanceState.getInt(SELECTED_LIST_ITEM_KEY);
+            mCurrentListPosition = savedInstanceState.getInt(SELECTED_LIST_ITEM_KEY);
+
         }
 
         // Set the empty view on to the screen if news info list is empty.
@@ -159,13 +162,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 int newSourceId = (int) id;
                 if (mCurrentSourceId != newSourceId) {
                     mCurrentSourceId = newSourceId;
-                    LoaderManager loaderManager = getLoaderManager();
-                    loaderManager.restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
-
+                    getLoaderManager().restartLoader(NEWS_LOADER_ID, null, MainActivity.this);
 
                     //Reset the savedInstanceState value to 0 to prevent a new listview from automatically
                     //scrolling to an item using the previously saved position.
-                    mPosition = 0;
+                    mCurrentListPosition = 0;
 
                     //Set the loading spinner to reappear when reloading view.
                     mLoadingSpinnerView.setVisibility(View.VISIBLE);
@@ -192,10 +193,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
-        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // When no item is selected, mCurrentListPosition will be set to Listview.INVALID_POSITION,
         // so check for that before storing.
-        if (mPosition != ListView.INVALID_POSITION) {
-            outState.putInt(SELECTED_LIST_ITEM_KEY, mPosition);
+        if (mCurrentListPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_LIST_ITEM_KEY, mCurrentListPosition);
 
             super.onSaveInstanceState(outState);
         }
@@ -246,11 +247,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Set the loading spinner to disappear after the loading has finished.
         mLoadingSpinnerView.setVisibility(View.GONE);
 
-        if (mPosition != ListView.INVALID_POSITION) {
+        if (mCurrentListPosition != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
-            newsListView.smoothScrollToPosition(mPosition);
-
+            newsListView.setSelection(mCurrentListPosition);
         }
     }
 

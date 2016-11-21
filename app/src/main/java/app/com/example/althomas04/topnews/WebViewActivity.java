@@ -23,13 +23,18 @@ public class WebViewActivity extends AppCompatActivity {
     private WebView webView;
     private ShareActionProvider mShareActionProvider;
 
-    private String articleUrl = MainActivity.newsArticleUrl;
+    public static String NEWS_ARTICLE_URL = "news_article_url";
+    private Bundle extras;
+    private String articleUrl;
 
     //Creates a WebView to display the full article within the app
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view);
+
+        extras = getIntent().getExtras();
+        articleUrl = extras.getString(NEWS_ARTICLE_URL);
 
         webView = (WebView) findViewById(R.id.web_view_layout);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -65,6 +70,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //Cutom up button returns to the parent activity without restarting the activity (goes to its previous state).
         if (item.getItemId() == android.R.id.home) {
             Intent intent = NavUtils.getParentActivityIntent(WebViewActivity.this);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

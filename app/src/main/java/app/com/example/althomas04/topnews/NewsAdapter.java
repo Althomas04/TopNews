@@ -30,6 +30,7 @@ public class NewsAdapter extends ArrayAdapter {
      * @param NewsDataList A List of News data objects to display in a list
      */
     public NewsAdapter(Activity context, ArrayList<NewsData> NewsDataList) {
+
         // Here, we initialize the ArrayAdapter's internal storage for the context and the list.
         // the second argument is used when the ArrayAdapter is populating a single TextView.
         // Because this is a custom adapter for multiple Views, the adapter is not

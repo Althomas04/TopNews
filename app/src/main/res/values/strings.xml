@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name"><b>Top News</b></string>
+    <string name="app_name">Top News</string>
 
     <string name="source">Select Source</string>
     <string name="action_about">About</string>
     <string name="action_share">Share</string>
+
     <string name="version_name">Version</string>
     <string name="powered_by">Powered by</string>
     <string name="api_link">NewsAPI.org</string>
