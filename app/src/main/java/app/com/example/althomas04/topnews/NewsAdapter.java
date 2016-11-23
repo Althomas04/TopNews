@@ -1,14 +1,14 @@
 package app.com.example.althomas04.topnews;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -103,24 +103,22 @@ public class NewsAdapter extends ArrayAdapter {
         // Find the ImageView in the list_item.xml layout with the ID article_image_view
         // Get the image using picasso library, scale it, and set this image on the ImageView
         // only IF news data object contains a vaild image. (Checked in if statement).
-        ImageView articleImageView = (ImageView) listItem.findViewById(R.id.article_image_view);
+        SimpleDraweeView draweeView = (SimpleDraweeView) listItem.findViewById(R.id.article_image_view);
         String articleImageUrl = currentNewsData.getImageUrl();
 
         //Checks if image is valid (not null) and the orientation mode.
         //Description view is only visible when image is not valid or if the orientation is in landscape.
         if (articleImageUrl != "null") {
-            Picasso.with(getContext())
-                    .load(articleImageUrl)
-                    .resize(1360, 900)
-                    .into(articleImageView);
-            articleImageView.setVisibility(View.VISIBLE);
+            Uri uri = Uri.parse(articleImageUrl);
+            draweeView.setImageURI(uri);
+            draweeView.setVisibility(View.VISIBLE);
             if (getContext().getResources().getBoolean(R.bool.is_portrait)) {
                 descriptionTextView.setVisibility(View.GONE);
             } else {
                 descriptionTextView.setVisibility(View.VISIBLE);
             }
         } else {
-            articleImageView.setVisibility(View.GONE);
+            draweeView.setVisibility(View.GONE);
             descriptionTextView.setVisibility(View.VISIBLE);
         }
 
@@ -129,10 +127,15 @@ public class NewsAdapter extends ArrayAdapter {
     }
 
     /**
-     * Convert Timed Date string into "MM/dd/yyyy'T'HH:mm:ss" format.
+     * Establish Timed Date string into "MM/dd/yyyy'T'HH:mm:ss" format.
      */
     private Date convertTimedDate(String timedDateObject) {
-        SimpleDateFormat timedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        SimpleDateFormat timedDateFormat;
+        if (timedDateObject.length() == 20) {
+            timedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        } else {
+            timedDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'", Locale.US);
+        }
         timedDateFormat.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
         Date convertedTimedDate = new Date();
         try {
